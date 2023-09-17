@@ -11,6 +11,7 @@ private:
 	int min;
 public:
 	time12() : pm(true), hour(0), min(0) {}
+	//time12(time24);
 	time12(bool ap, int h, int m) : pm(ap), hour(h), min(m) {}
 
 	void display()const {
@@ -41,8 +42,31 @@ public:
 		cout << seconds << endl;
 	}
 
+	//int getHrs();
+	//int getMins();
+	//int getSecs();
+
 	operator time12() const;
 };
+
+//time12::time12(time24 t24) {
+//	int hrs24 = t24.getHrs();
+//	pm = (t24.getHrs() < 12) ? false : true;
+//	
+//	min = (t24.getSecs() < 30) ? t24.getMins() : t24.getMins() + 1;
+//	if (min == 60) {
+//		min = 0;
+//		hour++;
+//		if (hrs24 == 12 || hrs24 == 24)
+//			pm = (pm == true) ? false : true;
+//	}
+//
+//	hour = (hrs24 < 13) ? hrs24 : hrs24 - 12;
+//	if (hour == 0 || hrs24 == 24) {
+//		hour = 12;
+//		pm = false;
+//	}
+//}
 
 time24::operator time12() const {
 	int h24 = hours;
