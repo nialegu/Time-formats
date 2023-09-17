@@ -48,19 +48,19 @@ time24::operator time12() const {
 	int h24 = hours;
 	bool pm = hours < 12 ? false : true;
 
-	int roundMins = seconds < 30 ? minutes : minutes+1;
+	int roundMins = (seconds < 30) ? minutes : minutes+1;
+
 	if (roundMins == 60) {
 		roundMins = 0;
-		++h24;
+		h24++;
 	}
-	if (h24 == 12 || h24 == 24) {
-		pm = (pm = true) ? false : true;
-	}
+
 	int h12 = (h24 < 13) ? h24 : h24 - 12;
-	if (h12 == 0) {
+	if (h12 == 0 || h24 == 24) {
 		h12 = 12;
 		pm = false;
 	}
+	
 	return time12(pm, h12, roundMins);
 }
 
@@ -69,7 +69,7 @@ int main() {
 	char dm;
 	while (true) {
 		cout << "Enter time in 24 hours format: ";
-		cin >> h >> dm >> m >> s;
+		cin >> h >> dm >> m >> dm >> s;
 		if (h > 23 || m > 60 || s > 60) {
 			cout << "Incorrect values";
 			return(1);
@@ -81,8 +81,8 @@ int main() {
 		time12 t12 = t24;
 		cout << "In 12 hours format: ";
 		t12.display();
-		cout << "\n";
-		break;
+		cout << "\n\n";
+		//break;
 	}
 
 	return 0;
