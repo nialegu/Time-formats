@@ -20,7 +20,7 @@ public:
 		if (min < 10) cout << 0;
 		cout << min << " ";
 		string am_pm = pm ? "p.m." : "a.m.";
-		cout << am_pm;
+		cout << am_pm << endl;
 	}
 };
 
@@ -45,9 +45,95 @@ public:
 	//int getHrs();
 	//int getMins();
 	//int getSecs();
-
+	time24 operator+(time24)const;
 	operator time12() const;
 };
+
+int main() {
+	int h, m, s;
+	char dm;
+
+	cout << "Enter time 1 in 24 hours format: ";
+	cin >> h >> dm >> m >> dm >> s;
+	if (h > 23 || m > 60 || s > 60) {
+		cout << "Incorrect values";
+		return(1);
+	}
+	time24 t1(h, m, s);
+
+	cout << "Enter time 2 in 24 hours format: ";
+	cin >> h >> dm >> m >> dm >> s;
+	if (h > 23 || m > 60 || s > 60) {
+		cout << "Incorrect values";
+		return(1);
+	}
+	time24 t2(h, m, s);
+
+	time24 t3 = t1 + t2;
+	t3.display();
+	time12 t3_12(t3);
+	t3_12.display();
+
+	while (true) {
+		cout << "Enter time in 24 hours format: ";
+		cin >> h >> dm >> m >> dm >> s;
+		if (h > 23 || m > 60 || s > 60) {
+			cout << "Incorrect values";
+			return(1);
+		}
+
+		time24 t24(h, m, s);
+		cout << "Original time: "; t24.display();
+
+		time12 t12 = t24;
+		cout << "In 12 hours format: ";
+		t12.display();
+		cout << "\n\n";
+		break;
+	}
+
+	return 0;
+}
+
+time24 time24::operator+(time24 t2) const {
+	int h, m, s;
+	h = hours + t2.hours;
+	m = minutes + t2.minutes;
+	s = seconds + t2.seconds;
+
+	if (s >= 60) {
+		s -= 60;
+		m++;
+	}
+	if (m >= 60) {
+		m -= 60;
+		h++;
+	}
+	if (h >= 24) 
+		h -= 24;
+
+	return time24(h, m, s);
+}
+
+time24::operator time12() const {
+	int h24 = hours;
+	bool pm = hours < 12 ? false : true;
+
+	int roundMins = (seconds < 30) ? minutes : minutes + 1;
+
+	if (roundMins == 60) {
+		roundMins = 0;
+		h24++;
+	}
+
+	int h12 = (h24 < 13) ? h24 : h24 - 12;
+	if (h12 == 0 || h24 == 24) {
+		h12 = 12;
+		pm = false;
+	}
+
+	return time12(pm, h12, roundMins);
+}
 
 //time12::time12(time24 t24) {
 //	int hrs24 = t24.getHrs();
@@ -67,47 +153,3 @@ public:
 //		pm = false;
 //	}
 //}
-
-time24::operator time12() const {
-	int h24 = hours;
-	bool pm = hours < 12 ? false : true;
-
-	int roundMins = (seconds < 30) ? minutes : minutes+1;
-
-	if (roundMins == 60) {
-		roundMins = 0;
-		h24++;
-	}
-
-	int h12 = (h24 < 13) ? h24 : h24 - 12;
-	if (h12 == 0 || h24 == 24) {
-		h12 = 12;
-		pm = false;
-	}
-	
-	return time12(pm, h12, roundMins);
-}
-
-int main() {
-	int h, m, s;
-	char dm;
-	while (true) {
-		cout << "Enter time in 24 hours format: ";
-		cin >> h >> dm >> m >> dm >> s;
-		if (h > 23 || m > 60 || s > 60) {
-			cout << "Incorrect values";
-			return(1);
-		}
-
-		time24 t24(h, m, s);
-		cout << "Original time: "; t24.display();
-
-		time12 t12 = t24;
-		cout << "In 12 hours format: ";
-		t12.display();
-		cout << "\n\n";
-		//break;
-	}
-
-	return 0;
-}
