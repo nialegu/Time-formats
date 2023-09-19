@@ -2,6 +2,7 @@
 #include <process.h>
 #include <string.h>
 #include <string>
+#include <conio.h>
 using namespace std;
 
 class time12 {
@@ -46,13 +47,26 @@ public:
 	//int getMins();
 	//int getSecs();
 	time24 operator+(time24)const;
+	time24 operator++();
+	time24 operator++(int);
+	time24 operator--();
+	time24 operator--(int);
 	operator time12() const;
 };
 
 int main() {
 	int h, m, s;
-	char dm;
+	char dm='a';
 
+	//check operator++ and operator-- working
+	/*time24 t_1(0, 1, 20), t_2;
+	while (dm!='0') {
+		t_2 = t_1++;
+		t_2.display();
+		dm = _getche();
+	}*/
+
+	//check operator+ working///////////////////////////////
 	cout << "Enter time 1 in 24 hours format: ";
 	cin >> h >> dm >> m >> dm >> s;
 	if (h > 23 || m > 60 || s > 60) {
@@ -73,7 +87,9 @@ int main() {
 	t3.display();
 	time12 t3_12(t3);
 	t3_12.display();
+	/////////////////////////////////////////////////////////
 
+	//check working of transform from format 24 to format 12 
 	while (true) {
 		cout << "Enter time in 24 hours format: ";
 		cin >> h >> dm >> m >> dm >> s;
@@ -90,9 +106,81 @@ int main() {
 		t12.display();
 		cout << "\n\n";
 		break;
-	}
+	}////////////////////////////////////////////////////////
 
 	return 0;
+}
+
+time24 time24::operator++(int) { //postfix format
+	int h = hours, m = minutes, s = seconds;
+	seconds++;
+	if (seconds == 60) {
+		seconds = 0;
+		minutes++;
+	}
+	if (minutes == 60) {
+		minutes = 0;
+		hours++;
+	}
+	if (hours == 24) {
+		hours = 0;
+	}
+	time24 t(h, m, s);
+	return t;
+}
+
+time24 time24::operator++() {
+	++seconds;
+	if (seconds == 60) {
+		seconds = 0;
+		++minutes;
+	}
+	if (minutes == 60) {
+		minutes = 0;
+		++hours;
+	}
+	if (hours == 24) {
+		hours = 0;
+	}
+	int h = hours, m = minutes, s = seconds;
+	time24 t(h, m, s);
+	return t;
+}
+
+time24 time24::operator--(int) { //postfix format
+	int h = hours, m = minutes, s = seconds;
+	seconds--;
+	if (seconds == -1) {
+		seconds = 59;
+		minutes--;
+	}
+	if (minutes == -1) {
+		minutes = 59;
+		hours--;
+	}
+	if (hours == -1) {
+		hours = 23;
+	}
+	time24 t(h, m, s);
+	return t;
+}
+
+time24 time24::operator--() {
+	--seconds;
+	if (seconds == -1) {
+		seconds = 59;
+		--minutes;
+	}
+	if (minutes == -1) {
+		minutes = 59;
+		--hours;
+	}
+	if (hours == -1) {
+		hours = 23;
+	}
+	int h = hours, m = minutes, s = seconds;
+	time24 t(h, m, s);
+	return t;
 }
 
 time24 time24::operator+(time24 t2) const {
